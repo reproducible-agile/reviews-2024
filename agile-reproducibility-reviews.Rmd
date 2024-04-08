@@ -1,0 +1,1052 @@
+---
+title: "Reproducibility Review AGILE 2024"
+author: "Daniel Nüst, Carlos Granell"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: yes
+    self_contained: true
+params:
+  private_info: yes
+---
+
+## Introduction
+
+This document includes scripts and text analysis to support the reproducibility review at the [AGILE conference 2024](https://agile-gi.eu/conference-2024), which is organised by the Urban Big Data Centre at University of Glasgow, UK.
+
+Find out more online [about reproducible publications at AGILE](https://doi.org/10.17605/OSF.IO/PHMCE) and the [review process](https://osf.io/eg4qx/), and visit the Reproducible AGILE website: [https://reproducible-agile.github.io/](https://reproducible-agile.github.io/).
+The code of this document is published on GitHub in the repository [reproducible-agile/reviews-2024](https://github.com/reproducible-agile/reviews-2024), where you can inspect the R code in the file `agile-reproducibility-reviews.Rmd` and find instructions for reproducing the workflow.
+The [report parameter](https://bookdown.org/yihui/rmarkdown/parameterized-reports.html) `private_info` can be set to `yes` to show information which cannot be shared publicly, such as author names, titles, or excerpts of not accepted submissions, and to upload review files to private shares, which requires authentication.
+
+```{r load_libraries, message=FALSE, warning=FALSE, include=FALSE}
+library("pdftools")
+library("stringr")
+library("tidyverse")
+library("tidytext")
+library("wordcloud")
+library("RColorBrewer")
+library("here")
+library("quanteda")
+library("googledrive")
+library("googlesheets4")
+library("kableExtra")
+library("httr")
+library("xml2")
+library("rvest")
+library("tidyr")
+library("ggplot2")
+library("httr")
+library("glue")
+library("tabulizer")
+```
+
+```{r seed, echo=FALSE}
+set.seed(27) # 27th AGILE!
+```
+
+```{r easychair_login, echo=params$private_info}
+if(is.na(Sys.getenv("easychair_username", unset = NA)) || is.na(Sys.getenv("easychair_password", unset = NA))) {
+  stop("Provide login details for EasyChair (e.g., in a file `.Renviron` - make sure to adjust read persmissions so that no user but you/root may access the file!) in environment variables",
+       "`easychair_username` and `easychair_password`")
+}
+
+# with help from https://github.com/kaytwo/easierchair/blob/master/scrape_easychair.py
+# https://stackoverflow.com/questions/23202522/r-httr-post-request-for-signing-in
+login_response <- NULL
+if(is.null(login_response)) {
+  login_response <- httr::POST(url = "https://easychair.org/account/verify",
+                         body = list(name = Sys.getenv("easychair_username"),
+                                     password = Sys.getenv("easychair_password")),
+                         encode = "form")
+}
+```
+
+## Submitted papers
+
+```{r local_paths, echo=FALSE}
+submissions_path <- here::here("submissions")
+dir.create(submissions_path, recursive = TRUE, showWarnings = FALSE)
+
+review_files_path <- here::here("review-material")
+dir.create(review_files_path, recursive = TRUE, showWarnings = FALSE)
+
+cr_path <- here::here("camera-ready-full-papers")
+```
+
+```{r conference_id, echo=FALSE}
+# get this from the URL when logged into EasyChair, e.g., https://easychair.org/conferences/submissions?a=30327426
+conference_id <- "30327426"
+```
+
+### Submission metadata
+
+Retrieve all information about submissions from the EasyChair submissions system.
+The full submission information is not included in the public rendering of this report.
+Make sure that the shown columns in the submission table include the colums required in the code below.
+
+```{r submissions, echo=FALSE}
+submission_page <- httr::GET(url = paste0("https://easychair.org/conferences/submissions?a=", conference_id))
+submission_html <- xml2::read_html(submission_page)
+submission_table_full <- html_node(submission_html, "#ec\\:table1")
+# remove first header row and set names manually later, because the vertical table headers are miages anyway
+xml_remove(xml_child(html_node(submission_table_full, "thead")))
+submission_table <- rvest::html_table(x = submission_table_full,
+                                      fill = TRUE)
+names(submission_table) <- c("id", "authors", "title",
+                             "information", "paper", "assigment", "update"
+                             , "NN", "NN"
+                             ,"type"
+                             ,"time"
+                             ,"decision"
+                             )
+#warning("manually adding submission type, table does not have it this year")
+#submission_table$type <- c(rep("Full-paper submission", times = 26), rep("Short-paper submission", times = nrow(submission_table) - 26))
+
+submission_table$id <- str_pad(submission_table$id, width = 3, side = "left", pad = "0")
+submission_table <- submission_table  %>%
+  mutate_if(is.character, list(~na_if(.,"")))
+
+links <- html_nodes(submission_table_full, "a[href]") %>% html_attr("href")
+submission_table$information <- paste("https://easychair.org",
+                                      links[str_detect(links, pattern = "submission_view")], sep = "")
+
+submission_table$submission_id <- str_match(submission_table$information, pattern = "submission=([[:digit:]]+)")[,2]
+submission_table$paper <- paste("https://easychair.org",
+                                sapply(submission_table$submission_id, function(x) { links[str_detect(links, pattern = paste0(".*download.*", x))] }),
+                                sep = "")
+for (i in 1:nrow(submission_table)) {
+  if(!is.na(str_match(submission_table[i,]$paper, "character\\(0\\)"))) {
+    submission_table[i,]$paper <- NA
+  }
+}
+
+
+#warnings("removing submissions 1 and 2, they are tests this year")
+#submission_table <- submission_table[3:nrow(submission_table),]
+
+submission_table %>%
+  group_by(type) %>%
+  tally() %>%
+  kable() %>%
+  kable_styling("striped")
+```
+
+```{r submissions_full_metadata, echo=FALSE}
+if(params$private_info) {
+  submission_table %>%
+    arrange(id) %>%
+    kable() %>%
+    kable_styling("striped") %>%
+    scroll_box(height = "480px")
+}
+```
+
+### Load texts
+
+The paper PDFs are downloaded from EasyChair directly using the links provided in the submission overview table.
+
+```{r download_easychair, echo=FALSE}
+for (i in 1:nrow(submission_table)) {
+  if(is.na(submission_table[i,]$paper)) {
+    cat("No paper URL for ", i, "\n")
+    next
+  }
+  
+  current <- submission_table[i,]
+  filename <- file.path(submissions_path, paste0(current$id, ".pdf"))
+  if(!file.exists(filename)) {
+    httr::GET(url = current$paper,
+              httr::write_disk(path = filename,
+                               overwrite = TRUE))
+  }
+}
+
+submission_files <- dir(path = submissions_path, pattern = ".pdf$", full.names = TRUE)
+
+submission_table <- left_join(submission_table,
+                              tibble("id" = str_match(submission_files,
+                                                      pattern = "([:digit:]*)\\.pdf")[,2],
+                                     "file" = submission_files),
+                              by = "id")
+
+submission_table
+```
+
+The text is extracted from PDFs and it is processed to create a [tidy](https://www.jstatsoft.org/article/view/v059i10) data structure without [stop words](https://en.wikipedia.org/wiki/Stop_words).
+The stop words include specific words, which might be included in the page header, abbreviations, and terms particular to scientific articles, such as `figure`.
+
+```{r tidy_data, echo=FALSE}
+texts <- list()
+for (i in 1:nrow(submission_table)) {
+  current <- submission_table[i,]
+  cat("Reading ", current$file, "\n")
+  the_text <- NA
+  if(!is.na(current$file)) {
+    tryCatch({
+      the_text <- tabulizer::extract_text(current$file)
+      the_text <- str_c(the_text, collapse = TRUE)
+      },
+      error = function(e) { warning("Text from ", current$id, " could not be loaded: ", toString(e))}
+    )
+  } else {
+    warning("No text available for paper ", current$id, " ", current$title)
+  }
+  
+  names(the_text) <- current$id
+  texts <- c(texts, the_text)
+}
+
+pages <- lapply(submission_table$file, function(f) {
+  pages <- NA
+  if(!is.na(f)) {
+    tryCatch({
+      pages <- pdftools::pdf_info(f)$pages
+      },
+      error = function(e) { warning("Could not read pages from ", current$id, " because: ", toString(e))}
+    )  
+  }
+  
+  return(pages)
+})
+
+tidy_texts <- tibble(id = submission_table$id,
+                     path = submission_table$file,
+                     type = submission_table$type,
+                     submission_table$type,
+                     text = unlist(texts),
+                     pages = pages)
+
+# create a table of all words
+all_words <- tidy_texts %>%
+  select(id,
+         type,
+         text) %>%
+  unnest_tokens(word, text)
+
+# remove stop words and remove numbers
+my_stop_words <- tibble(
+  word = c(
+    "et",
+    "al",
+    "fig",
+    "e.g",
+    "i.e",
+    "http",
+    "https",
+    "doi.org",
+    "ing",
+    "pp",
+    "figure",
+    "based",
+    "conference",
+    "university",
+    "table"
+  ),
+  lexicon = "agile"
+)
+
+all_stop_words <- stop_words %>%
+  bind_rows(my_stop_words)
+suppressWarnings({
+  no_numbers <- all_words %>%
+    filter(is.na(as.numeric(word)))
+})
+
+no_stop_words <- no_numbers %>%
+  anti_join(all_stop_words, by = "word")
+
+total_words = nrow(all_words)
+after_cleanup = nrow(no_stop_words)
+```
+
+About `r round(after_cleanup/total_words * 100, digits = 0)`&nbsp;% of the words are considered stop words.
+
+The following table shows how many words and non-stop words each document has, sorted by number of non-stop words.
+The `id` is built from the file name plus a prefix:
+for full papers, it is the left-padded submission number and the prefix `fp_`;
+<!--for short papers and posters, it is the submission number included in the file name and the prefixes `sp_` and `po_` respectively.-->
+
+```{r stop_words, echo=FALSE, message=FALSE, warning=FALSE}
+nsw_per_doc <- no_stop_words %>%
+  group_by(id) %>%
+  summarise(words = n()) %>%
+  rename(`non-stop words` = words)
+
+words_per_doc <- all_words %>%
+  group_by(id, type) %>%
+  summarise(words = n())
+
+type_counts_totals <- submission_table %>%
+  group_by(type) %>%
+  tally()
+type_counts_totals$type <- c(#"Full-paper submission"
+                             #, "Poster submission"
+                             #, "Short-paper submission"
+                             "Full paper"
+                             , "Poster"
+                             , "Short paper"
+                             )
+type_counts_totals <- paste(
+  paste(type_counts_totals$type, type_counts_totals$n, sep = ":"),
+  collapse = "|")
+
+
+words_joined <- as.data.frame(inner_join(words_per_doc, nsw_per_doc))
+summary_row <- tibble(id = "Total",
+                      type = type_counts_totals,
+                      words = sum(words_per_doc$words),
+                      `non-stop words` = sum(nsw_per_doc$`non-stop words`))
+if(!params$private_info) {
+  words_joined$id <- NULL
+  summary_row$id <- NULL
+}
+
+bind_rows(words_joined, summary_row) %>%
+  kable() %>%
+  kable_styling("striped", full_width = FALSE) %>%
+  row_spec(nrow(words_joined) + 1, bold = TRUE) %>%
+  scroll_box(height = "240px")
+```
+
+### Which papers include a "Data and Software Availability" section?
+
+According the the [AGILE Reproducible Paper Guidelines](https://osf.io/c8gtq/), all authors must add a _Data and Software Availability_ section to their paper.
+This detection naturally relies on the loaded texts _with_ stop words.
+
+```{r dasa_section, echo=FALSE}
+dasa_pattern <- regex("(Data and Software Availability|Software and Data Availability)", ignore_case = TRUE)
+tidy_texts <- tidy_texts %>%
+  mutate(has_dasa = str_detect(tidy_texts$text, pattern = dasa_pattern))
+
+dasa_count <- tidy_texts %>% filter(has_dasa) %>% nrow()
+
+excerpt_length <- 800
+dasa_texts <- tidy_texts %>%
+  filter(has_dasa) %>%
+  mutate(dasa_start = str_locate(.data$text, pattern = dasa_pattern)[,1]) %>%
+  mutate(dasa_text = str_sub(.data$text, start = dasa_start, end = dasa_start + excerpt_length)) %>%
+  select(id, type, dasa_text)
+```
+
+`r dasa_count` papers have the section in question, that is `r round(dasa_count/nrow(submission_table) * 100)`&nbsp;% of all submissions.
+Here are the statistics per submission type:
+
+```{r dasa_statistics, echo=FALSE}
+dasa_stats <- tidy_texts %>%
+  filter(has_dasa) %>%
+  group_by(type, .drop = FALSE) %>%
+  summarise(n = n())
+
+dasa_stats <- left_join(tidy_texts %>%
+                          group_by(type, .drop = FALSE) %>%
+                          summarise(submissions = n()),
+                        dasa_stats,
+                        by = "type")
+
+dasa_stats <- dasa_stats %>%
+  mutate(`%` = round(n/submissions*100, digits = 1))
+
+dasa_stats %>%
+  arrange(desc(n)) %>%
+  rename(`with DASA` = n) %>%
+  kable() %>%
+  kable_styling("striped")
+```
+
+`r if(!params$private_info) {"<!--"}`
+The following table shows the first `r excerpt_length` characters of these sections.
+`r if(!params$private_info) {"-->"}`
+
+```{r dasa_section_table_md, echo=FALSE, eval=params$private_info}
+if(params$private_info) {
+  dasa_texts %>%
+    arrange(id) %>%
+    kable() %>%
+    kable_styling("striped") %>%
+    scroll_box(height = "320px")
+}
+```
+
+### Wordstem analysis
+
+```{r wordstem_data, include=FALSE}
+wordstems <- no_stop_words %>%
+  mutate(wordstem = quanteda::char_wordstem(
+    stringr::str_trim(no_stop_words$word)))
+
+countPapersUsingWordstem <- function(the_word) {
+  sapply(the_word, function(w) {
+    wordstems %>%
+      filter(wordstem == w) %>%
+      group_by(id) %>%
+      count %>%
+      nrow
+  })
+}
+
+top_wordstems <- wordstems %>%
+  group_by(wordstem) %>%
+  tally %>%
+  arrange(desc(n)) %>%
+  head(20) %>%
+  mutate(`# papers` = countPapersUsingWordstem(wordstem)) %>%
+  mutate(`% papers` = round(countPapersUsingWordstem(wordstem)/nrow(submission_table) * 100)) %>%
+  add_column(place = c(1:nrow(.)), .before = 0)
+
+minimum_occurence <- 100
+cloud_wordstems <- wordstems %>%
+  group_by(wordstem) %>%
+  tally %>%
+  filter(n >= minimum_occurence) %>%
+  arrange(desc(n))
+```
+
+For the following table and figure, the word stems were extracted based on a stemming algorithm from package [`quanteda`](https://cran.r-project.org/package=quanteda).
+The word cloud is based on `r length(unique(cloud_wordstems$wordstem))` unique words occuring each at least `r minimum_occurence` times, all in all occuring `r sum(cloud_wordstems$n)` times which comprises `r round(sum(cloud_wordstems$n)/ nrow(no_stop_words) * 100)`&nbsp;% of non-stop words.
+
+```{r top_wordstems, echo=FALSE}
+top_wordstems %>%
+  kable() %>%
+  kable_styling("striped") %>%
+  scroll_box(height = "320px")
+```
+
+```{r wordstemcloud, dpi=150, echo=FALSE, fig.cap="Wordstem cloud of AGILE 2023 full paper submissions"}
+wordcloud(cloud_wordstems$wordstem, cloud_wordstems$n,
+          max.words = 220, # manually tested and set
+          random.order = FALSE,
+          fixed.asp = FALSE,
+          rot.per = 0,
+          color = brewer.pal(8,"Dark2"))
+```
+
+## Reproducible research-related keywords of all submissions
+
+The following tables lists how often terms related to reproducible research appear in each document.
+The detection matches full words using regex option `\b`.
+
+- reproduc (`reproduc.*`, reproducibility, reproducible, reproduce, reproduction)
+- replic (`replicat.*`, i.e. replication, replicate)
+- repeatab (`repeatab.*`, i.e. repeatability, repeatable)
+- software
+- (pseudo) code/script(s) [column name _code_]
+- algorithm (`algorithm.*`, i.e. algorithms, algorithmic)
+- process (`process.*`, i.e. processing, processes, preprocessing)
+- data (`data.*`, i.e. dataset(s), database(s))
+- result(s) (`results?`)
+- repository(ies) (`repositor(y|ies)`)
+- collaboration platforms (`git(hub|lab)`)
+
+The following table highlights papers with the Data and Software Availability Section with italic font and grey background.
+The entries are sorted by descending sum of all keywords per paper.
+
+```{r keywords_per_paper, echo=FALSE, warning=FALSE}
+tidy_texts_lower <- str_to_lower(tidy_texts$text)
+word_counts <- tibble(
+  id = tidy_texts$id,
+  type = tidy_texts$type,
+  DASA = tidy_texts$has_dasa,
+  `reproduc..` = str_count(tidy_texts_lower, "\\breproduc.*\\b"),
+  `replic..` = str_count(tidy_texts_lower, "\\breplicat.*\\b"),
+  `repeatab..` = str_count(tidy_texts_lower, "\\brepeatab.*\\b"),
+  `code` = str_count(tidy_texts_lower,
+    "(\\bcode\\b|\\bscript.*\\b|\\bpseudo\ code\\b)"),
+  software = str_count(tidy_texts_lower, "\\bsoftware\\b"),
+  `algorithm(s)` = str_count(tidy_texts_lower, "\\balgorithm.*\\b"),
+  `(pre)process..` = str_count(tidy_texts_lower, 
+                "(\\bprocess.*\\b|\\bpreprocess.*\\b|\\bpre-process.*\\b)"),
+  `data.*` = str_count(tidy_texts_lower, "\\bdata.*\\b"),
+  `result(s)` = str_count(tidy_texts_lower, "\\bresults?\\b"),
+  `repository/ies` = str_count(tidy_texts_lower, "\\brepositor(y|ies)\\b"),
+  `github/lab` = str_count(tidy_texts_lower, "\\bgit(hub|lab)\\b")
+)
+
+# https://stackoverflow.com/a/32827260/261210
+sumColsInARow <- function(df, list_of_cols, new_col) {
+  df %>% 
+    mutate_(.dots = ~Reduce(`+`, .[list_of_cols])) %>% 
+    setNames(c(names(df), new_col))
+}
+
+word_counts_sums <- sumColsInARow(
+  word_counts, 
+  names(word_counts)[!(names(word_counts) %in% c("id", "type"))], "all") %>%
+  arrange(desc(all))
+
+DASA_counts <- word_counts_sums %>%
+  group_by(DASA) %>%
+  tally()
+
+word_counts_sums_total <- word_counts_sums %>% 
+  summarise_if(is.numeric, funs(sum)) %>%
+  add_column(id = "Total",
+             type = "",
+             DASA = paste0("T:", DASA_counts[2,2], "|F:", DASA_counts[1,2]),
+             .before = 0)
+word_counts_sums <- rbind(word_counts_sums, word_counts_sums_total)
+
+if(!params$private_info) {
+  word_counts_sums$id <- NULL
+}
+
+word_counts_sums %>%
+  kable() %>%
+  kable_styling("striped", font_size = 12, bootstrap_options = "condensed")  %>%
+  row_spec(0, font_size = "x-small", bold = T)  %>%
+  row_spec(word_counts_sums %>% rownames_to_column() %>%
+             filter(DASA == TRUE, .preserve = TRUE) %>%
+             select(rowname) %>% unlist() %>% as.numeric(),
+           italic = TRUE, background = "#eeeeee") %>%
+  row_spec(nrow(word_counts_sums), bold = T) %>%
+  scroll_box(height = "480px")
+```
+
+------
+
+## Accepted full papers
+
+### Full paper decisions
+
+There is "accept" and "conditionally accept" (after second review)!
+
+```{r scrape_accepted, echo=FALSE, eval=params$private_info}
+submission_table %>%
+  filter(type == "Full paper") %>%
+  group_by(decision) %>%
+  summarise(count = n()) %>%
+  kable() %>%
+  kable_styling("striped")
+```
+
+```{r compile review data, echo=FALSE, eval=params$private_info}
+#page <- httr::GET(url = "https://easychair.org/conferences/status?a=26091618")
+#review_status_page <- xml2::read_html(page)
+#review_table <- rvest::html_table(html_nodes(review_status_page, ".paperTable")[[1]], header = TRUE)
+#names(review_table)[4] <- "average"
+#names(review_table)[1] <- "id"
+#review_table$id <- str_pad(review_table$id, width = 3, side = "left", pad = "0")
+#
+## IMPORTANT: "Show paper authors" must be _un_ticked for the following code to work
+#review_table <- review_table %>%
+#  tidyr::separate(col = title, into = c("authors","title"), sep = "\\.+?", extra = "merge")
+#
+## the tr element of the review table has the internal paper ID in format "r4789577"
+#review_table$internal_id <- sapply(X = html_nodes(review_status_page, css = ".paperTable tr[id]"), FUN = function(row) {
+#  substr(html_attr(row, "id"), 2, 999)
+#})
+
+review_data <- left_join(submission_table, dasa_texts %>% select(-type),
+                         by = "id")
+
+accepted_papers <- review_data %>%
+    dplyr::filter(decision == "ACCEPT" | decision == "accept?") %>%
+    filter(type == "Full paper") %>%
+    arrange(id) %>%
+    kable() %>%
+    kable_styling("striped") %>%
+    scroll_box(height = "480px")
+if(params$private_info) {
+  accepted_papers
+}
+```
+
+
+`r if(!params$private_info) {"<!--"}`
+
+### Which accepted papers do still not hava a DASA section
+
+```{r accepted_no_dasa, eval=params$private_info}
+review_data %>%
+  filter(type == "Full paper") %>%
+  dplyr::filter(decision == "ACCEPT", is.na(`dasa_text`)) %>%
+  select(id, title, authors)
+```
+
+### Which papers have a link to the reproducibility review
+
+_Does not work reliably yet._
+**_Furthermore, this is not critical anymore because Copernicus now adds a reference to the reproducibility reports._**
+These are the papers where the reproducibility review resulted in at least partially successful reproduction.
+
+```{r report_links, eval=params$private_info}
+# hope that at least on of the phrases is not stretched across multiple spaces
+report_pattern <- regex("(AGILE[:space:]reproducibility[:space:]review|reproducibility[:space:]report)", ignore_case = TRUE)
+tidy_texts <- tidy_texts %>%
+  mutate(has_report = str_detect(tidy_texts$text, pattern = report_pattern))
+
+report_count <- tidy_texts %>% filter(has_report) %>% nrow()
+
+excerpt_length <- 300
+report_texts <- tidy_texts %>%
+  filter(has_report) %>%
+  mutate(report_start = str_locate(.data$text, pattern = report_pattern)[,1]) %>%
+  mutate(report_text = str_sub(.data$text, start = report_start, end = report_start + excerpt_length)) %>%
+  select(id, type, report_text)
+
+report_texts %>%
+    arrange(id) %>%
+    kable() %>%
+    kable_styling("striped") %>%
+    scroll_box(height = "320px")
+
+```
+
+## Reproducibility reviews
+
+### About
+
+The assignment of reviews is done via a privately shared spreadsheet, to handle potential non-public comments.
+The main outcome of the reviews is a _report_, which is published in individual OSF projects as components of the [OSF project for the reproducibility reviews 2023](https://osf.io/2k56f/).
+The report should be based on a template from this repository in [`report-template`](report-template).
+
+### Prepare data for reviewers
+
+#### Overview and files
+
+Reproducibility reviewers (might not) have access to the submission and reviews through EasyChair.
+The following snippets help to create a shared Google Spreadsheet to manage the status of reproductions.
+
+The spreadsheet is privately shared at <https://docs.google.com/spreadsheets/d/16DuExJqtp_fI3FLlOWOVRZQXyOYU1W3FCm9dgLlfRqk/>.
+
+```{r upload_settings}
+review_data_csv_file <- file.path(review_files_path, paste0("review_data_", lubridate::year(lubridate::now()), ".csv"))
+```
+
+1. Write paper metadata (ID, decision, title) to a CSV file `r review_data_csv_file`
+1. **Manually** [import the paper metadata into the spreadsheet](https://www.tillerhq.com/how-to-import-csv-into-a-google-spreadsheet/) (Select cell `A1` then "File" > "Import" > "Import File" > "My Drive" then search for `review_data` and find `review_data.csv` then select the file > "Replace data at selected cell" and click "Import data")
+
+```{r accepted_fp_files_download_easychair, echo=FALSE, eval=params$private_info}
+review_files <- review_data %>%
+  filter(type == "Full paper") %>%
+  dplyr::filter(decision == "ACCEPT") %>%
+  select(id, submission_id, decision, title, file, paper)
+
+# first, re-download all accepted full paper PDFs to make sure we have latest copies
+for (i in 1:nrow(review_files)) {
+  current <- review_files[i,]
+  filename <- file.path(review_files_path, paste0(current$id, ".pdf"))
+  httr::GET(url = current$paper,
+              httr::write_disk(path = filename,
+                               overwrite = TRUE))
+}
+```
+
+```{r update_camera_ready_file_paths, echo=FALSE, eval=params$private_info}
+# Use this chunk if camera ready files are not managed via EasyChair
+review_files <- review_data %>%
+  filter(type == "Full paper") %>%
+  dplyr::filter(decision == "ACCEPT") %>%
+  dplyr::mutate(file = stringr::str_replace(.$file, pattern = "submissions", replacement = "camera-ready-full-papers")) %>%
+  select(id, submission_id, decision, authors, title, file, paper)
+
+# copy camera ready files to upload directory
+for (i in 1:nrow(review_files)) {
+  current <- review_files[i,]
+  file.copy(from = file.path(cr_path, paste0(current$id, ".pdf")),
+            to = file.path(review_files_path, paste0(current$id, ".pdf")))
+}
+```
+
+```{r review_data_csv, echo=FALSE, eval=params$private_info}
+readr::write_csv(review_files %>%
+                   select(ID = id, Decision = decision, Title = title),
+                 file = review_data_csv_file,
+                 append = FALSE)
+```
+
+#### Reviewer comments
+
+```{r reviewer_comments, echo=FALSE, eval=params$private_info}
+# get review contents for each paper
+
+# Example page: https://easychair.org/conferences/submission_reviews?a=26091618;submission=5333543
+retrieve_review <- function(id, submission_id) {
+  url <- parse_url("https://easychair.org/conferences/submission_reviews")
+  url$query <- list(submission = submission_id, a = conference_id)
+  response <- httr::GET(url = build_url(url))
+  content <- content(response)
+  page_title <- as.character(
+    xml_contents(
+      html_node(
+        content(response), "title")))
+  if(grepl("Log in", page_title))
+     stop("You must (re)login to EasyChair")
+  
+  # check if id matches
+  title_id <- str_pad(str_extract(page_title,
+    "[[:digit:]]"),
+    width = 3, side = "left", pad = "0")
+  
+  cat(id, " -- ", title_id, "\n")
+  
+  if(is.na(id) || is.na(title_id)) {
+    warning(paste("Ids are both NA for submission", submission_id), "\n")
+    return(NA)
+  }
+  
+  if(id != title_id)
+    warning(paste("Ids mismatch, id: ", id, " id in reponse: ", title_id), "\n")
+  
+  review_doc <- xml_new_root(xml_dtd(name = "html", external_id = "-//W3C//DTD XHTML 1.0 Transitional//EN", system_id = "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"))
+  review_head <- xml2::xml_add_child(review_doc, "head")
+  review_style <- xml2::xml_add_child(review_head, "style")
+  xml_text(review_style) <- "
+  table, th, td {
+    border: 1px solid black;
+    padding: 5px;
+  }
+  table {
+    margin-bottom: 20px;
+  }"
+  
+  review_body <- xml2::xml_add_child(review_doc, "body")
+  
+  xml2::xml_add_child(review_body,
+                      xml2::xml_find_first(content,
+                                           xpath = "//h3[contains(., 'Submission')]/following-sibling::div"))
+  
+  # remove missing reviewer name(s)
+  xml2::xml_replace(xml2::xml_find_all(review_body,
+                                       xpath = "//td[starts-with(., 'Missing')]/following-sibling::td"),
+                    xml2::xml_comment("anonymised"))
+  
+  review_content <- xml2::xml_find_all(content,
+                                       xpath = "//h3[starts-with(., 'Reviews')]/following-sibling::div")
+  if(length(review_content) > 0) {
+    for (i in c(1:length(review_content))) {
+      
+      # remove PC member name
+      xml2::xml_replace(xml2::xml_find_all(review_content,
+                                           xpath = "//td[starts-with(., 'PC')]/following-sibling::td"),
+                        xml2::xml_comment("anonymised"))
+      
+      xml2::xml_add_child(review_body, review_content[[i]])
+    }
+  } else {
+    xml2::xml_add_child(review_body, xml2::read_xml("<strong>No reviews available yet.</strong>"))
+  }
+  
+  reviews_html_path <- file.path(review_files_path, paste0(id, "_reviews.html"))
+  xml2::write_html(review_doc, reviews_html_path)
+  reviews_html_path
+}
+
+#retrieve_review(review_files[17,]$id, review_files[17,]$submission_id)
+
+for(i in c(1:nrow(review_files))) {
+  retrieve_review(review_files[i,]$id, review_files[i,]$submission_id)
+}
+```
+
+#### Author contacts
+
+```{r author_contacts, echo=FALSE, eval=params$private_info}
+# Example page: https://easychair.org/conferences/submission_view?a=26091618;submission=5333543
+retrieve_authors <- function(id, submission_id, authors, title) {
+  url <- parse_url("https://easychair.org/conferences/submission_view")
+  url$query <- list(submission = submission_id, a = conference_id)
+  response <- httr::GET(url = build_url(url))
+  content <- content(response)
+  page_title <- as.character(
+    xml_contents(
+      html_node(
+        content(response), "title")))
+  if(grepl("Log in", page_title))
+     stop("You must (re)login to EasyChair")
+  
+  # check if id matches
+  title_id <- str_pad(str_extract(page_title,
+    "[[:digit:]]"),
+    width = 3, side = "left", pad = "0")
+  
+  cat(id, " -- ", title_id, "\n")
+  
+  if(is.na(id) || is.na(title_id)) {
+    warning(paste("Ids are both NA for submission", submission_id), "\n")
+    return(NA)
+  }
+  
+  if(id != title_id)
+    warning(paste("Ids mismatch, id: ", id, " id in reponse: ", title_id), "\n")
+  
+  authors_doc <- xml_new_root("html")
+  authors_head <- xml2::xml_add_child(authors_doc, "head")
+  authors_style <- xml2::xml_add_child(authors_head, "style")
+  xml_text(authors_style) <- "
+  table, th, td {
+    border: 1px solid black;
+    padding: 5px;
+  }
+  table {
+    margin-bottom: 20px;
+  }
+  .pagetitle {
+    font-size: 20px;
+    padding: 0px 0px 20px 0px;
+  }
+  .contact {
+    font-size: 20px;
+    padding: 10px;
+    border: 3px solid red;
+  }"
+  
+  authors_body <- xml2::xml_add_child(authors_doc, "body")
+  
+  xml2::xml_add_child(authors_body,
+                      xml2::xml_find_first(content,
+                                           xpath = "//div[@class='pagetitle']"))
+  
+  xml2::xml_add_child(authors_body,
+                      xml2::xml_find_first(content,
+                                           xpath = "//table[@id='ec:table2']"))
+  
+  # make clickable email links and extract author names
+  authors_table <- xml2::xml_find_all(authors_body, xpath = "//tr[@class='green']")
+  names <- c()
+  emails <- c()
+  for (a in authors_table) {
+    cells <- xml2::xml_children(a)
+    names <- c(names, paste(xml2::xml_text(cells[[1]]),
+                            xml2::xml_text(cells[[2]]))
+               )
+    emails <- c(emails, xml2::xml_text(cells[[3]]))
+  }
+  
+  contact <- xml2::xml_add_child(authors_body, "div")
+  xml2::xml_set_attr(contact, "class", "contact")
+  names_xml <- xml2::xml_add_child(contact, "div")
+  #xml2::xml_text(names_xml) <- glue::glue_collapse(x = names, sep = ",", last = " and ")
+  xml2::xml_text(names_xml) <- authors
+  
+  link_xml <- xml2::xml_add_child(xml2::xml_add_child(contact, "div"), "a")
+  xml2::xml_set_attr(link_xml, "href", paste0(
+    "mailto:",
+    glue::glue_collapse(x = emails, sep = ";"),
+    "?subject=AGILE conference reproducibility review for submission ",
+    id,
+    "&cc=daniel.nuest@tu-dresden.de",
+    "&body=Dear ", authors, ",",
+    "%0D%0A%0D%0AYour submission '", title, "'"
+  ))
+  xml2::xml_text(link_xml) <- "Send email to authors (CC reproducibility chair)"
+  
+  authors_html_path <- file.path(review_files_path, paste0(id, "_authors.html"))
+  xml2::write_html(authors_doc, authors_html_path, encoding = "ISO-8859-1")
+  authors_html_path
+}
+
+#test_id <- 17
+#retrieve_authors(review_files[test_id,]$id, review_files[test_id,]$submission_id, review_files[test_id,]$authors, review_files[test_id,]$title)
+
+for(i in c(1:nrow(review_files))) {
+  retrieve_authors(review_files[i,]$id, review_files[i,]$submission_id, review_files[i,]$authors, review_files[i,]$title)
+}
+```
+
+#### Upload submissions, reviews, and author contacts, to share
+
+```{r review_files_upload_to_share, echo=FALSE, eval=params$private_info}
+if (params$private_info) {
+  # put accepted full papers to private share
+  library("googledrive")
+  googledrive::drive_auth(use_oob = TRUE)
+  submissions_and_reviews <- "https://drive.google.com/drive/folders/1ghOSXTD6RzgRPd21-sK482pWrsHU1Ors"
+  
+  
+  # upload review data file for manual import (see above)
+  googledrive::drive_put(media = review_data_csv_file,
+                         name = basename(review_data_csv_file),
+                         path = submissions_and_reviews)
+  
+  # upload submission files
+  sapply(list.files(review_files_path, pattern = "pdf", full.names = TRUE), function(the_file) {
+     googledrive::drive_put(media = the_file,
+                            name = basename(the_file),
+                            path = submissions_and_reviews)
+  })
+  
+  # upload reviewe and contact information
+  sapply(list.files(review_files_path, pattern = "reviews", full.names = TRUE), function(the_file) {
+     googledrive::drive_put(media = the_file,
+                            name = basename(the_file),
+                            path = submissions_and_reviews)
+  })
+  sapply(list.files(review_files_path, pattern = "authors", full.names = TRUE), function(the_file) {
+     googledrive::drive_put(media = the_file,
+                            name = basename(the_file),
+                            path = submissions_and_reviews)
+  })
+}
+```
+
+### Prepare CSV with titles and DOIs for publisher
+
+```{r csv_for_publisher}
+if(params$private_info) {
+  googlesheets4::range_read(
+    ss = "https://docs.google.com/spreadsheets/d/16DuExJqtp_fI3FLlOWOVRZQXyOYU1W3FCm9dgLlfRqk",
+    range =  "review_data!A:F"
+    ) %>%
+    select(`ID`, `Title`, `Report DOI`) %>%
+    filter(!is.na(`Report DOI`)) %>%
+    write.csv(paste("AGILE-Reproducibility-Review", lubridate::year(lubridate::now()), "_report-DOIs.csv"), row.names = FALSE)
+}
+```
+
+`r if(!params$private_info) {"-->"}`
+
+### Reproducibility reviewer instructions
+
+1. Familiarise yourself with the [AGILE Reproducibility Review Process](https://docs.google.com/document/d/1JHCQV7GP3YkKwp0Nii3dt3p3Y45hU56Xz2cr-xJVz34/edit#heading=h.oheeg2s92zdm); the following steps are just tl;dr version
+2. Take a look at the [review report template](https://github.com/reproducible-agile/reviews-2024/blob/master/report-template/reproreview-template.Rmd) - even if you're not using it, it gives you guidance
+3. Go to the [Discoure forum discussion for reproducibility reviewers](https://discourse.agile-online.org/c/repro-review-2023/9) and find your assignments
+4. Conduct your reproducibility review and write the report
+    - Don't forget to take a look at the scientific reviews for comments on reproducibility; do _not_ worry about the science or read the full paper, unless it really interests you
+    - Check the authors and their affiliations of the submission - is there a relation (e.g., former colleague, current supervisor) that may be seen as inappropriate for you as a reproducibility reviewer? Is there a conflict of interest? If so, please contact the reproducibility chair, and ask in the Discourse forum if another reproducibility reviewer would be available to switch assignments
+    - If code is available on GitHub/Lab, please fork the project into the [Reproducible AGILE organisation](https://github.com/reproducible-agile/) respectively the [GitLab subgroup "reviews"](https://gitlab.com/reproducible-agile/reviews) and immediately "archive" the project so that it becomes read-only ([instructions GitHub](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-archiving-repositories), [instructions for GitLab](https://docs.gitlab.com/ee/user/project/settings/#archiving-a-project)); ask Daniel to get the permissions for the organisations
+    - If need be, limit the review scope, e.g. reproduce only a specific figure; the reproducibility review should not take you longer (not counting computation time) than a scientific review, and even computation times should not expand longer than a working day
+5. Send the report to the original authors of the paper and add the reproducibility chair in CC, see template below;
+7. Add a new component to the [OSF project for 2024 reproducibility reviews](https://osf.io/qvr4s/)
+    - Use the European storage location, "Frankfurt"
+    - Name the component `Reproducibility review of: <FULL PAPER TITLE HERE>`
+    - Add link to the OSF project in the master spreadsheet
+    - Keep the project **private** until the publication of the paper (we don't want to announce anything that is not our place to announce)
+    - Wait for final paper citation from publisher and add it to the report
+7. In the OSF project for the reproducibility report
+    - Add all _contributors_ to the review to the project
+    - In the project _configuration_:
+        - disable the "Wiki", unless you add content to it
+        - set the category of repository to "Other"
+    - Add the to be expected DOI to your report and to the coordination spreadsheet: append the project ID of the OSF project in capitals to `10.17605/OSF.IO/` to guess the future DOI
+8. _After_ papers are published:
+    - Upload the report and supplemental material created by you, if suitable also the original material (add `LICENSE.md` and licensing information in the OSF project description in that case)
+    - Upload a PDF of your report and any useful supplemental files
+    - Publish the component
+    - Mint a DOI (double check if it is correct)
+
+### Author contact templates
+
+#### Reminder DASA by reproducibility chair
+
+```
+Dear <AUTHORS>,
+
+I'm contacting you as the corresponding author of the paper "<TITLE>" submitted to AGILE 2024.
+
+In my screening of accepted papers I saw that your submission does not include a Data and Software Availability ("DASA") section. Please note that a DASA section with precisely that name is mandatory. Furthermore a successful reproduction of your workflow would be an advertisement for your paper.
+
+Please provide the DASA section by the end of the week so we can start the reproducibility review.
+
+Regards,
+Carlos & Frnak
+
+AGILE Reproducibility Committee Cochair 2024
+```
+
+#### Reminder DASA
+
+```
+Dear <AUTHORS>,
+
+I'm contacting you as the corresponding author of the paper "<TITLE>" submitted to AGILE 2024.
+I'm the reproducibility reviewer your paper has been assigned to.
+
+The scientific reviewers have noted that your paper does not include a Data and Software Availability ("DASA") section.
+Please note that a DASA section is mandatory and successful reproduction of your workflow would be an advertisement for your paper.
+
+Please provide the DASA section by <DEADLINE> so we can start the reproducibility review.
+
+Regards,
+<NAME>
+
+AGILE Reproducibility Committee 2024
+```
+
+#### Reminder DASA + synthetic data for proprietary data
+
+```
+Dear <AUTHORS>,
+
+I'm contacting you as the corresponding author of the paper "<TITLE>" submitted to AGILE 2024.
+I'm the reproducibility reviewer your paper has been assigned to.
+
+The scientific reviewers <SELECT: have, have not> note that your paper does not include a dedicated Data and Software Availability ("DASA") section. This section should provide a concise statement if and where data and software is available, or why it is not public. Please note that a DASA section is mandatory, even if data or code is not available.
+Refer to the AGILE Reproducible Paper Guidelines (https://osf.io/cb7z8/) for detailed information and possible DASA section statements. Please don't hesitate to get in touch with me if you have any questions!
+
+In your manuscript you state that both code and data cannot be shared due to licensing issues. Is it possible for you to provide a synthetic dataset or subset and the code in order for us to reproduce your methodology?
+
+Kind regards,
+<NAME>
+
+AGILE Reproducibility Committee 2024
+```
+
+#### Share report draft
+
+```
+Dear AUTHORS,
+
+Congratulations to the acceptance of your submission "TITLE" as a full paper at the AGILE conference 2024.
+
+As part of the Reproducible AGILE initative (https://reproducible-agile.github.io/) I attempted to reproduce the results from your paper. Attached to this email you find my report on your results. I welcome your feedback before I publish the report. You can already now add the following sentence to the Data and Software Availability section:
+
+"The workflow underlying this paper was <SELECT: partially reproduced, successfully reproduced> by an independent reviewer during the AGILE reproducibility review and a reproducibility report was published at https://doi.org/10.17605/osf.io/<ADD LOWERCASE 5 LETTER OSF REPO ID HERE BUT NO TRAILING SLASH>."
+
+The reproducibility report will be published soon after the papers is published by Copernicus, so we can insert the proper citation of your work into the report.
+
+[OPTIONAL:] Alongside the report I would like to publish an archive of the used data and script files, and the output files generated by myself. Note these would be published under a CC-BY license on OSF, though the original source and license are noted in the report.
+
+Please don't hesitate to get in touch with me and Daniel Nüst (CC'ed), AGILE conference's Reproducibility Chair, if you have any questions. Please also include your coauthors in any further communication as you see fit.
+
+Best regards,
+<NAME>
+
+AGILE Reproducibility Committee 2024
+```
+
+#### Report published
+
+```
+Dear <AUTHORS>,
+
+Thank you for your participation in a real open science endeavour!
+
+The reproducibility review report on your paper is now published at DOI URL HERE.
+
+Please don't hesitate to get in touch with Daniel Nüst (CC'ed), AGILE conference's Reproducibility Chair, if you have any questions.
+
+Best regards,
+<NAME>
+
+AGILE Reproducibility Committee 2024
+```
+
+## Colophon
+
+This document is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
+All contained code is licensed under the [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/).
+
+**Runtime environment description:**
+
+```{r session_info, echo=FALSE}
+sessionInfo()
+```
+
+**The used MRAN snapshot is `r paste(options("repos"))`**.
+
+```{r render_public_version, eval=FALSE, include=FALSE}
+rmarkdown::render(input = "agile-reproducibility-reviews.Rmd",
+                  params = list(private_info = FALSE),
+                  output_dir = here::here("docs/"),
+                  output_format = rmarkdown::html_document(toc = TRUE, self_contained = FALSE))
+```
+
+```{r upload_to_drive, eval=FALSE, include=FALSE}
+# upload the HTML file and source code to the Reproducibility Committee shared folder
+drive_put(media = "agile-reproducibility-reviews.html",
+          name = paste0("agile-reproducibility-reviews_",
+                 ifelse(params$private_info, "PRIVATE", "public"),
+                 ".html"),
+          path = as_dribble("https://drive.google.com/drive/folders/1EC3es2ia4XzchWy6-QuVam28E9teDBe9"))
+drive_put("agile-reproducibility-reviews.Rmd", path = as_dribble("https://drive.google.com/drive/folders/1EC3es2ia4XzchWy6-QuVam28E9teDBe9"))
+```

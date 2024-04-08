@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Daniel Nüst, Carlos Granell" />
+
+
+<title>Reproducibility Review AGILE 2023</title>
+
+<script src="agile-reproducibility-reviews_files/header-attrs-2.13/header-attrs.js"></script>
+<script src="agile-reproducibility-reviews_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="agile-reproducibility-reviews_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="agile-reproducibility-reviews_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="agile-reproducibility-reviews_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="agile-reproducibility-reviews_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="agile-reproducibility-reviews_files/navigation-1.1/tabsets.js"></script>
+<link href="agile-reproducibility-reviews_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="agile-reproducibility-reviews_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="agile-reproducibility-reviews_files/kePrint-0.0.1/kePrint.js"></script>
+<link href="agile-reproducibility-reviews_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Reproducibility Review AGILE 2023</h1>
+<h4 class="author">Daniel Nüst, Carlos Granell</h4>
+<h4 class="date">10 February, 2023</h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#submitted-papers">Submitted papers</a>
+<ul>
+<li><a href="#submission-metadata">Submission metadata</a></li>
+<li><a href="#load-texts">Load texts</a></li>
+<li><a
+href="#which-papers-include-a-data-and-software-availability-section">Which
+papers include a “Data and Software Availability” section?</a></li>
+<li><a href="#wordstem-analysis">Wordstem analysis</a></li>
+</ul></li>
+<li><a
+href="#reproducible-research-related-keywords-of-all-submissions">Reproducible
+research-related keywords of all submissions</a></li>
+<li><a href="#accepted-full-papers">Accepted full papers</a>
+<ul>
+<li><a href="#full-paper-decisions">Full paper decisions</a></li>
+<li><a href="#reproducibility-reviewer-instructions">Reproducibility
+reviewer instructions</a></li>
+<li><a href="#author-contact-templates">Author contact
+templates</a></li>
+</ul></li>
+<li><a href="#colophon">Colophon</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This document includes scripts and text analysis to support the
+reproducibility review at the <a
+href="https://agile-online.org/conference-2023">AGILE conference
+2023</a>, which is organised by a team from TU Delft, the
+Netherlands.</p>
+<p>Find out more online <a
+href="https://doi.org/10.17605/OSF.IO/PHMCE">about reproducible
+publications at AGILE</a> and the <a href="https://osf.io/eg4qx/">review
+process</a>, and visit the Reproducible AGILE website: <a
+href="https://reproducible-agile.github.io/">https://reproducible-agile.github.io/</a>.
+The code of this document is published on GitHub in the repository <a
+href="https://github.com/reproducible-agile/reviews-2023">reproducible-agile/reviews-2023</a>,
+where you can inspect the R code in the file
+<code>agile-reproducibility-reviews.Rmd</code> and find instructions for
+reproducing the workflow. The <a
+href="https://bookdown.org/yihui/rmarkdown/parameterized-reports.html">report
+parameter</a> <code>private_info</code> can be set to <code>yes</code>
+to show information which cannot be shared publicly, such as author
+names, titles, or excerpts of not accepted submissions, and to upload
+review files to private shares, which requires authentication.</p>
+</div>
+<div id="submitted-papers" class="section level2">
+<h2>Submitted papers</h2>
+<div id="submission-metadata" class="section level3">
+<h3>Submission metadata</h3>
+<p>Retrieve all information about submissions from the EasyChair
+submissions system. The full submission information is not included in
+the public rendering of this report. Make sure that the shown columns in
+the submission table include the colums required in the code below.</p>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+type
+</th>
+<th style="text-align:right;">
+n
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Poster
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Short paper
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="load-texts" class="section level3">
+<h3>Load texts</h3>
+<p>The paper PDFs are downloaded from EasyChair directly using the links
+provided in the submission overview table.</p>
+<p>The text is extracted from PDFs and it is processed to create a <a
+href="https://www.jstatsoft.org/article/view/v059i10">tidy</a> data
+structure without <a
+href="https://en.wikipedia.org/wiki/Stop_words">stop words</a>. The stop
+words include specific words, which might be included in the page
+header, abbreviations, and terms particular to scientific articles, such
+as <code>figure</code>.</p>
+<pre><code>## Reading  /home/rstudio/submissions/279.pdf 
+## Reading  /home/rstudio/submissions/697.pdf 
+## Reading  /home/rstudio/submissions/1104.pdf 
+## Reading  /home/rstudio/submissions/1128.pdf 
+## Reading  /home/rstudio/submissions/1744.pdf 
+## Reading  /home/rstudio/submissions/2121.pdf 
+## Reading  /home/rstudio/submissions/2447.pdf 
+## Reading  /home/rstudio/submissions/2519.pdf 
+## Reading  /home/rstudio/submissions/3525.pdf 
+## Reading  /home/rstudio/submissions/3927.pdf 
+## Reading  /home/rstudio/submissions/4115.pdf 
+## Reading  /home/rstudio/submissions/4446.pdf 
+## Reading  /home/rstudio/submissions/4560.pdf 
+## Reading  /home/rstudio/submissions/4590.pdf 
+## Reading  /home/rstudio/submissions/5621.pdf 
+## Reading  /home/rstudio/submissions/7133.pdf 
+## Reading  /home/rstudio/submissions/7480.pdf 
+## Reading  /home/rstudio/submissions/7915.pdf 
+## Reading  /home/rstudio/submissions/8144.pdf 
+## Reading  /home/rstudio/submissions/8611.pdf 
+## Reading  /home/rstudio/submissions/8664.pdf 
+## Reading  /home/rstudio/submissions/8710.pdf 
+## Reading  /home/rstudio/submissions/9083.pdf 
+## Reading  /home/rstudio/submissions/9531.pdf 
+## Reading  /home/rstudio/submissions/9675.pdf</code></pre>
+<pre><code>## Warning: Outer names are only allowed for unnamed scalar atomic inputs</code></pre>
+<p>About 48 % of the words are considered stop words.</p>
+<p>The following table shows how many words and non-stop words each
+document has, sorted by number of non-stop words. The <code>id</code> is
+built from the file name plus a prefix: for full papers, it is the
+left-padded submission number and the prefix <code>fp_</code>;
+<!--for short papers and posters, it is the submission number included in the file name and the prefixes `sp_` and `po_` respectively.--></p>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:240px; ">
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+type
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+words
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+non-stop words
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+8941
+</td>
+<td style="text-align:right;">
+4279
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+6349
+</td>
+<td style="text-align:right;">
+3056
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+6610
+</td>
+<td style="text-align:right;">
+2999
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+8680
+</td>
+<td style="text-align:right;">
+3935
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+8118
+</td>
+<td style="text-align:right;">
+3894
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+8078
+</td>
+<td style="text-align:right;">
+3626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+8042
+</td>
+<td style="text-align:right;">
+4055
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+6355
+</td>
+<td style="text-align:right;">
+3216
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Short paper
+</td>
+<td style="text-align:right;">
+3581
+</td>
+<td style="text-align:right;">
+1821
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+7209
+</td>
+<td style="text-align:right;">
+3582
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+6446
+</td>
+<td style="text-align:right;">
+3156
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+6072
+</td>
+<td style="text-align:right;">
+2904
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+4985
+</td>
+<td style="text-align:right;">
+2222
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+6911
+</td>
+<td style="text-align:right;">
+3802
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+3456
+</td>
+<td style="text-align:right;">
+1795
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+7249
+</td>
+<td style="text-align:right;">
+3681
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+3021
+</td>
+<td style="text-align:right;">
+1493
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+6833
+</td>
+<td style="text-align:right;">
+3323
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+7472
+</td>
+<td style="text-align:right;">
+3734
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+7998
+</td>
+<td style="text-align:right;">
+3809
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Poster
+</td>
+<td style="text-align:right;">
+497
+</td>
+<td style="text-align:right;">
+275
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+6389
+</td>
+<td style="text-align:right;">
+2629
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+8719
+</td>
+<td style="text-align:right;">
+3964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+5457
+</td>
+<td style="text-align:right;">
+2404
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+Full paper:22|Poster:1|Short paper:2
+</td>
+<td style="text-align:right;font-weight: bold;">
+153468
+</td>
+<td style="text-align:right;font-weight: bold;">
+73654
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="which-papers-include-a-data-and-software-availability-section"
+class="section level3">
+<h3>Which papers include a “Data and Software Availability”
+section?</h3>
+<p>According the the <a href="https://osf.io/c8gtq/">AGILE Reproducible
+Paper Guidelines</a>, all authors must add a <em>Data and Software
+Availability</em> section to their paper. This detection naturally
+relies on the loaded texts <em>with</em> stop words.</p>
+<p>17 papers have the section in question, that is 68 % of all
+submissions. Here are the statistics per submission type:</p>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+type
+</th>
+<th style="text-align:right;">
+submissions
+</th>
+<th style="text-align:right;">
+with DASA
+</th>
+<th style="text-align:right;">
+%
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+72.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Short paper
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+50.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Poster
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+<!--
+The following table shows the first 800 characters of these sections.
+-->
+</div>
+<div id="wordstem-analysis" class="section level3">
+<h3>Wordstem analysis</h3>
+<p>For the following table and figure, the word stems were extracted
+based on a stemming algorithm from package <a
+href="https://cran.r-project.org/package=quanteda"><code>quanteda</code></a>.
+The word cloud is based on 121 unique words occuring each at least 100
+times, all in all occuring 20988 times which comprises 28 % of non-stop
+words.</p>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:320px; ">
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+place
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+wordstem
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+n
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+# papers
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+% papers
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+data
+</td>
+<td style="text-align:right;">
+757
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+96
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+map
+</td>
+<td style="text-align:right;">
+652
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+76
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+result
+</td>
+<td style="text-align:right;">
+405
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+96
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+studi
+</td>
+<td style="text-align:right;">
+380
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+92
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+inform
+</td>
+<td style="text-align:right;">
+374
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+92
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+spatial
+</td>
+<td style="text-align:right;">
+361
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+92
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+user
+</td>
+<td style="text-align:right;">
+347
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+68
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+analysi
+</td>
+<td style="text-align:right;">
+344
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+88
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+forest
+</td>
+<td style="text-align:right;">
+291
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+24
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+locat
+</td>
+<td style="text-align:right;">
+288
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+84
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:left;">
+model
+</td>
+<td style="text-align:right;">
+272
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+76
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:left;">
+imag
+</td>
+<td style="text-align:right;">
+262
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+52
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:left;">
+particip
+</td>
+<td style="text-align:right;">
+261
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+40
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:left;">
+concept
+</td>
+<td style="text-align:right;">
+253
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+60
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:left;">
+research
+</td>
+<td style="text-align:right;">
+252
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+92
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:left;">
+network
+</td>
+<td style="text-align:right;">
+250
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+76
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:left;">
+chart
+</td>
+<td style="text-align:right;">
+244
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:left;">
+question
+</td>
+<td style="text-align:right;">
+239
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+68
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:left;">
+time
+</td>
+<td style="text-align:right;">
+237
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+96
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:left;">
+environ
+</td>
+<td style="text-align:right;">
+223
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+80
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="figure">
+<img src="agile-reproducibility-reviews_files/figure-html/wordstemcloud-1.png" alt="Wordstem cloud of AGILE 2023 full paper submissions" width="1050" />
+<p class="caption">
+Wordstem cloud of AGILE 2023 full paper submissions
+</p>
+</div>
+</div>
+</div>
+<div id="reproducible-research-related-keywords-of-all-submissions"
+class="section level2">
+<h2>Reproducible research-related keywords of all submissions</h2>
+<p>The following tables lists how often terms related to reproducible
+research appear in each document. The detection matches full words using
+regex option <code>\b</code>.</p>
+<ul>
+<li>reproduc (<code>reproduc.*</code>, reproducibility, reproducible,
+reproduce, reproduction)</li>
+<li>replic (<code>replicat.*</code>, i.e. replication, replicate)</li>
+<li>repeatab (<code>repeatab.*</code>, i.e. repeatability,
+repeatable)</li>
+<li>software</li>
+<li>(pseudo) code/script(s) [column name <em>code</em>]</li>
+<li>algorithm (<code>algorithm.*</code>, i.e. algorithms,
+algorithmic)</li>
+<li>process (<code>process.*</code>, i.e. processing, processes,
+preprocessing)</li>
+<li>data (<code>data.*</code>, i.e. dataset(s), database(s))</li>
+<li>result(s) (<code>results?</code>)</li>
+<li>repository(ies) (<code>repositor(y|ies)</code>)</li>
+<li>collaboration platforms (<code>git(hub|lab)</code>)</li>
+</ul>
+<p>The following table highlights papers with the Data and Software
+Availability Section with italic font and grey background. The entries
+are sorted by descending sum of all keywords per paper.</p>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:480px; ">
+<table class="table table-condensed" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+type
+</th>
+<th style="text-align:left;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+DASA
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+reproduc..
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+replic..
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+repeatab..
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+code
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+software
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+algorithm(s)
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+(pre)process..
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+data.*
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+result(s)
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+repository/ies
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+github/lab
+</th>
+<th style="text-align:right;font-weight: bold;font-size: x-smallpx;position: sticky; top:0; background-color: #FFFFFF;">
+all
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+5
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+34
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+25
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+37
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+56
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+163
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+8
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+9
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+101
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+27
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+154
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+97
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+148
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+118
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+4
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+10
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+65
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+20
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+104
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+4
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+75
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+11
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+102
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+70
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+19
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+96
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+7
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+12
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+57
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+6
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+90
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+70
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+4
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+10
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+5
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+27
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+12
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+63
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+47
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+60
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+11
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+28
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+16
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+58
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Short paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+32
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+16
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+53
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+32
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+11
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+52
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+4
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+10
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+22
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+5
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+4
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+51
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+6
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+9
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+23
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+43
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+20
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+12
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+15
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+16
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+40
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+5
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+6
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+14
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+1
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+3
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+18
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+12
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+34
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+Full paper
+</td>
+<td style="text-align:left;font-style: italic;background-color: #eeeeee !important;">
+TRUE
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+2
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+19
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+4
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+0
+</td>
+<td style="text-align:right;font-style: italic;background-color: #eeeeee !important;">
+26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full paper
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Poster
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Short paper
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+</td>
+<td style="text-align:left;font-weight: bold;">
+T:17|F:8
+</td>
+<td style="text-align:right;font-weight: bold;">
+8
+</td>
+<td style="text-align:right;font-weight: bold;">
+2
+</td>
+<td style="text-align:right;font-weight: bold;">
+0
+</td>
+<td style="text-align:right;font-weight: bold;">
+27
+</td>
+<td style="text-align:right;font-weight: bold;">
+74
+</td>
+<td style="text-align:right;font-weight: bold;">
+76
+</td>
+<td style="text-align:right;font-weight: bold;">
+160
+</td>
+<td style="text-align:right;font-weight: bold;">
+904
+</td>
+<td style="text-align:right;font-weight: bold;">
+371
+</td>
+<td style="text-align:right;font-weight: bold;">
+11
+</td>
+<td style="text-align:right;font-weight: bold;">
+15
+</td>
+<td style="text-align:right;font-weight: bold;">
+1665
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr />
+</div>
+<div id="accepted-full-papers" class="section level2">
+<h2>Accepted full papers</h2>
+<div id="full-paper-decisions" class="section level3">
+<h3>Full paper decisions</h3>
+<p>There is “accept” and “conditionally accept” (after second
+review)!</p>
+<!--
+
+### Which accepted papers do still not hava a DASA section
+
+
+```r
+review_data %>%
+  filter(type == "Full paper") %>%
+  dplyr::filter(decision == "ACCEPT", is.na(`dasa_text`)) %>%
+  select(id, title, authors)
+```
+
+### Which papers have a link to the reproducibility review
+
+_Does not work reliably yet._
+**_Furthermore, this is not critical anymore because Copernicus now adds a reference to the reproducibility reports._**
+These are the papers where the reproducibility review resulted in at least partially successful reproduction.
+
+
+```r
+# hope that at least on of the phrases is not stretched across multiple spaces
+report_pattern <- regex("(AGILE[:space:]reproducibility[:space:]review|reproducibility[:space:]report)", ignore_case = TRUE)
+tidy_texts <- tidy_texts %>%
+  mutate(has_report = str_detect(tidy_texts$text, pattern = report_pattern))
+
+report_count <- tidy_texts %>% filter(has_report) %>% nrow()
+
+excerpt_length <- 300
+report_texts <- tidy_texts %>%
+  filter(has_report) %>%
+  mutate(report_start = str_locate(.data$text, pattern = report_pattern)[,1]) %>%
+  mutate(report_text = str_sub(.data$text, start = report_start, end = report_start + excerpt_length)) %>%
+  select(id, type, report_text)
+
+report_texts %>%
+    arrange(id) %>%
+    kable() %>%
+    kable_styling("striped") %>%
+    scroll_box(height = "320px")
+```
+
+## Reproducibility reviews
+
+### About
+
+The assignment of reviews is done via a privately shared spreadsheet, to handle potential non-public comments.
+The main outcome of the reviews is a _report_, which is published in individual OSF projects as components of the [OSF project for the reproducibility reviews 2023](https://osf.io/2k56f/).
+The report should be based on a template from this repository in [`report-template`](report-template).
+
+### Prepare data for reviewers
+
+#### Overview and files
+
+Reproducibility reviewers (might not) have access to the submission and reviews through EasyChair.
+The following snippets help to create a shared Google Spreadsheet to manage the status of reproductions.
+
+The spreadsheet is privately shared at <https://docs.google.com/spreadsheets/d/16DuExJqtp_fI3FLlOWOVRZQXyOYU1W3FCm9dgLlfRqk/>.
+
+
+```r
+review_data_csv_file <- file.path(review_files_path, paste0("review_data_", lubridate::year(lubridate::now()), ".csv"))
+```
+
+1. Write paper metadata (ID, decision, title) to a CSV file /home/rstudio/review-material/review_data_2023.csv
+1. **Manually** [import the paper metadata into the spreadsheet](https://www.tillerhq.com/how-to-import-csv-into-a-google-spreadsheet/) (Select cell `A1` then "File" > "Import" > "Import File" > "My Drive" then search for `review_data` and find `review_data.csv` then select the file > "Replace data at selected cell" and click "Import data")
+
+
+
+
+
+
+
+#### Reviewer comments
+
+
+
+#### Author contacts
+
+
+
+#### Upload submissions, reviews, and author contacts, to share
+
+
+
+### Prepare CSV with titles and DOIs for publisher
+
+
+```r
+if(params$private_info) {
+  googlesheets4::range_read(
+    ss = "https://docs.google.com/spreadsheets/d/16DuExJqtp_fI3FLlOWOVRZQXyOYU1W3FCm9dgLlfRqk",
+    range =  "review_data!A:F"
+    ) %>%
+    select(`ID`, `Title`, `Report DOI`) %>%
+    filter(!is.na(`Report DOI`)) %>%
+    write.csv(paste("AGILE-Reproducibility-Review", lubridate::year(lubridate::now()), "_report-DOIs.csv"), row.names = FALSE)
+}
+```
+
+-->
+</div>
+<div id="reproducibility-reviewer-instructions" class="section level3">
+<h3>Reproducibility reviewer instructions</h3>
+<ol style="list-style-type: decimal">
+<li>Familiarise yourself with the <a
+href="https://docs.google.com/document/d/1JHCQV7GP3YkKwp0Nii3dt3p3Y45hU56Xz2cr-xJVz34/edit#heading=h.oheeg2s92zdm">AGILE
+Reproducibility Review Process</a>; the following steps are just tl;dr
+version</li>
+<li>Take a look at the <a
+href="https://github.com/reproducible-agile/reviews-2023/blob/master/report-template/reproreview-template.Rmd">review
+report template</a> - even if you’re not using it, it gives you
+guidance</li>
+<li>Go to the <a
+href="https://discourse.agile-online.org/c/repro-review-2023/9">Discoure
+forum discussion for reproducibility reviewers</a> and find your
+assignments</li>
+<li>Conduct your reproducibility review and write the report
+<ul>
+<li>Don’t forget to take a look at the scientific reviews for comments
+on reproducibility; do <em>not</em> worry about the science or read the
+full paper, unless it really interests you</li>
+<li>Check the authors and their affiliations of the submission - is
+there a relation (e.g., former colleague, current supervisor) that may
+be seen as inappropriate for you as a reproducibility reviewer? Is there
+a conflict of interest? If so, please contact the reproducibility chair,
+and ask in the Discourse forum if another reproducibility reviewer would
+be available to switch assignments</li>
+<li>If code is available on GitHub/Lab, please fork the project into the
+<a href="https://github.com/reproducible-agile/">Reproducible AGILE
+organisation</a> respectively the <a
+href="https://gitlab.com/reproducible-agile/reviews">GitLab subgroup
+“reviews”</a> and immediately “archive” the project so that it becomes
+read-only (<a
+href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-archiving-repositories">instructions
+GitHub</a>, <a
+href="https://docs.gitlab.com/ee/user/project/settings/#archiving-a-project">instructions
+for GitLab</a>); ask Daniel to get the permissions for the
+organisations</li>
+<li>If need be, limit the review scope, e.g. reproduce only a specific
+figure; the reproducibility review should not take you longer (not
+counting computation time) than a scientific review, and even
+computation times should not expand longer than a working day</li>
+</ul></li>
+<li>Send the report to the original authors of the paper and add the
+reproducibility chair in CC, see template below;</li>
+<li>Add a new component to the <a href="https://osf.io/2k56f/">OSF
+project for 2023 reproducibility reviews</a>
+<ul>
+<li>Use the European storage location, “Frankfurt”</li>
+<li>Name the component
+<code>Reproducibility review of: &lt;FULL PAPER TITLE HERE&gt;</code></li>
+<li>Add link to the OSF project in the master spreadsheet</li>
+<li>Keep the project <strong>private</strong> until the publication of
+the paper (we don’t want to announce anything that is not our place to
+announce)</li>
+<li>Wait for final paper citation from publisher and add it to the
+report</li>
+</ul></li>
+<li>In the OSF project for the reproducibility report
+<ul>
+<li>Add all <em>contributors</em> to the review to the project</li>
+<li>In the project <em>configuration</em>:
+<ul>
+<li>disable the “Wiki”, unless you add content to it</li>
+<li>set the category of repository to “Other”</li>
+</ul></li>
+<li>Add the to be expected DOI to your report and to the coordination
+spreadsheet: append the project ID of the OSF project in capitals to
+<code>10.17605/OSF.IO/</code> to guess the future DOI</li>
+</ul></li>
+<li><em>After</em> papers are published:
+<ul>
+<li>Upload the report and supplemental material created by you, if
+suitable also the original material (add <code>LICENSE.md</code> and
+licensing information in the OSF project description in that case)</li>
+<li>Upload a PDF of your report and any useful supplemental files</li>
+<li>Publish the component</li>
+<li>Mint a DOI (double check if it is correct)</li>
+</ul></li>
+</ol>
+</div>
+<div id="author-contact-templates" class="section level3">
+<h3>Author contact templates</h3>
+<div id="reminder-dasa-by-reproducibility-chair" class="section level4">
+<h4>Reminder DASA by reproducibility chair</h4>
+<pre><code>Dear &lt;AUTHORS&gt;,
+
+I&#39;m contacting you as the corresponding author of the paper &quot;&lt;TITLE&gt;&quot; submitted to AGILE 2023.
+
+In my screening of accepted papers I saw that your submission does not include a Data and Software Availability (&quot;DASA&quot;) section. Please note that a DASA section with precisely that name is mandatory. Furthermore a successful reproduction of your workflow would be an advertisement for your paper.
+
+Please provide the DASA section by the end of the week so we can start the reproducibility review.
+
+Regards,
+Daniel
+
+AGILE Reproducibility Committee Chair 2023</code></pre>
+</div>
+<div id="reminder-dasa" class="section level4">
+<h4>Reminder DASA</h4>
+<pre><code>Dear &lt;AUTHORS&gt;,
+
+I&#39;m contacting you as the corresponding author of the paper &quot;&lt;TITLE&gt;&quot; submitted to AGILE 2023.
+I&#39;m the reproducibility reviewer your paper has been assigned to.
+
+The scientific reviewers have noted that your paper does not include a Data and Software Availability (&quot;DASA&quot;) section.
+Please note that a DASA section is mandatory and successful reproduction of your workflow would be an advertisement for your paper.
+
+Please provide the DASA section by &lt;DEADLINE&gt; so we can start the reproducibility review.
+
+Regards,
+&lt;NAME&gt;
+
+AGILE Reproducibility Committee 2023</code></pre>
+</div>
+<div id="reminder-dasa-synthetic-data-for-proprietary-data"
+class="section level4">
+<h4>Reminder DASA + synthetic data for proprietary data</h4>
+<pre><code>Dear &lt;AUTHORS&gt;,
+
+I&#39;m contacting you as the corresponding author of the paper &quot;&lt;TITLE&gt;&quot; submitted to AGILE 2023.
+I&#39;m the reproducibility reviewer your paper has been assigned to.
+
+The scientific reviewers &lt;SELECT: have, have not&gt; note that your paper does not include a dedicated Data and Software Availability (&quot;DASA&quot;) section. This section should provide a concise statement if and where data and software is available, or why it is not public. Please note that a DASA section is mandatory, even if data or code is not available.
+Refer to the AGLIE Reproducible Paper Guidelines (https://osf.io/cb7z8/) for detailed information and possible DASA section statements. Please don&#39;t hesitate to get in touch with me if you have any questions!
+
+In your manuscript you state that both code and data cannot be shared due to licensing issues. Is it possible for you to provide a synthetic dataset or subset and the code in order for us to reproduce your methodology?
+
+Kind regards,
+&lt;NAME&gt;
+
+AGILE Reproducibility Committee 2023</code></pre>
+</div>
+<div id="share-report-draft" class="section level4">
+<h4>Share report draft</h4>
+<pre><code>Dear AUTHORS,
+
+congratulations to the acceptance of your submission &quot;TITLE&quot; as a full paper at the AGILE conference 2023.
+
+As part of the Reproducible AGILE initative (https://reproducible-agile.github.io/) I attempted to reproduce the results from your paper. Attached to this email you find my report on your results. I welcome your feedback before I publish the report. You can already now add the following sentence to the Data and Software Availability section:
+
+&quot;The workflow underlying this paper was &lt;SELECT: partially reproduced, successfully reproduced&gt; by an independent reviewer during the AGILE reproducibility review and a reproducibility report was published at https://doi.org/10.17605/osf.io/&lt;ADD LOWERCASE 5 LETTER OSF REPO ID HERE BUT NO TRAILING SLASH&gt;.&quot;
+
+The reproducibility report will be published soon after the papers is published by Copernicus, so we can insert the proper citation of your work into the report.
+
+[OPTIONAL:] Alongside the report I would like to publish an archive of the used data and script files, and the output files generated by myself. Note these would be published under a CC-BY license on OSF, though the original source and license are noted in the report.
+
+Please don&#39;t hesitate to get in touch with me and Daniel Nüst (CC&#39;ed), AGILE conference&#39;s Reproducibility Chair, if you have any questions. Please also include your coauthors in any further communication as you see fit.
+
+Best regards,
+&lt;NAME&gt;
+
+AGILE Reproducibility Committee 2023</code></pre>
+</div>
+<div id="report-published" class="section level4">
+<h4>Report published</h4>
+<pre><code>Dear &lt;AUTHORS&gt;,
+
+thank you for your participation in a real open science endeavour!
+
+The reproducibility review report on your paper is now published at DOI URL HERE.
+
+Please don&#39;t hesitate to get in touch with Daniel Nüst (CC&#39;ed), AGILE conference&#39;s Reproducibility Chair, if you have any questions.
+
+Best regards,
+&lt;NAME&gt;
+
+AGILE Reproducibility Committee 2023</code></pre>
+</div>
+</div>
+</div>
+<div id="colophon" class="section level2">
+<h2>Colophon</h2>
+<p>This document is licensed under a <a
+href="https://creativecommons.org/licenses/by/4.0/">Creative Commons
+Attribution 4.0 International License</a>. All contained code is
+licensed under the <a
+href="https://choosealicense.com/licenses/apache-2.0/">Apache License
+2.0</a>.</p>
+<p><strong>Runtime environment description:</strong></p>
+<pre><code>## R version 4.1.3 (2022-03-10)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04.5 LTS
+## 
+## Matrix products: default
+## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8          LC_NUMERIC=C                 
+##  [3] LC_TIME=en_US.UTF-8           LC_COLLATE=en_US.UTF-8       
+##  [5] LC_MONETARY=en_US.UTF-8       LC_MESSAGES=en_US.UTF-8      
+##  [7] LC_PAPER=en_US.UTF-8          LC_NAME=en_US.UTF-8          
+##  [9] LC_ADDRESS=en_US.UTF-8        LC_TELEPHONE=en_US.UTF-8     
+## [11] LC_MEASUREMENT=en_US.UTF-8    LC_IDENTIFICATION=en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] tabulizer_0.2.3     glue_1.6.2          rvest_1.0.2        
+##  [4] xml2_1.3.3          httr_1.4.2          kableExtra_1.3.4   
+##  [7] googlesheets4_1.0.0 googledrive_2.0.0   quanteda_3.2.1     
+## [10] here_1.0.1          wordcloud_2.6       RColorBrewer_1.1-3 
+## [13] tidytext_0.3.2      forcats_0.5.1       dplyr_1.0.8        
+## [16] purrr_0.3.4         readr_2.1.2         tidyr_1.2.0        
+## [19] tibble_3.1.6        ggplot2_3.3.5       tidyverse_1.3.1    
+## [22] stringr_1.4.0       pdftools_3.2.0     
+## 
+## loaded via a namespace (and not attached):
+##  [1] fs_1.5.2            bit64_4.0.5         lubridate_1.8.0    
+##  [4] webshot_0.5.3       rprojroot_2.0.3     SnowballC_0.7.0    
+##  [7] bslib_0.3.1         tools_4.1.3         backports_1.4.1    
+## [10] utf8_1.2.2          R6_2.5.1            DBI_1.1.2          
+## [13] colorspace_2.0-3    withr_2.5.0         tidyselect_1.1.2   
+## [16] bit_4.0.4           curl_4.3.2          compiler_4.1.3     
+## [19] cli_3.2.0           sass_0.4.1          scales_1.2.0       
+## [22] askpass_1.1         rappdirs_0.3.3      systemfonts_1.0.4  
+## [25] digest_0.6.29       rmarkdown_2.13      svglite_2.1.0      
+## [28] pkgconfig_2.0.3     htmltools_0.5.2     highr_0.9          
+## [31] dbplyr_2.1.1        fastmap_1.1.0       rlang_1.0.2        
+## [34] readxl_1.4.0        rstudioapi_0.13     jquerylib_0.1.4    
+## [37] generics_0.1.2      jsonlite_1.8.0      vroom_1.5.7        
+## [40] tokenizers_0.2.1    magrittr_2.0.3      Matrix_1.4-0       
+## [43] Rcpp_1.0.8.3        munsell_0.5.0       fansi_1.0.3        
+## [46] lifecycle_1.0.1     stringi_1.7.6       yaml_2.3.5         
+## [49] grid_4.1.3          parallel_4.1.3      crayon_1.5.1       
+## [52] lattice_0.20-45     haven_2.5.0         hms_1.1.1          
+## [55] knitr_1.38          pillar_1.7.0        stopwords_2.3      
+## [58] fastmatch_1.1-3     reprex_2.0.1        evaluate_0.15      
+## [61] qpdf_1.1            RcppParallel_5.1.5  modelr_0.1.8       
+## [64] tabulizerjars_1.0.1 selectr_0.4-2       png_0.1-7          
+## [67] vctrs_0.4.1         tzdb_0.3.0          cellranger_1.1.0   
+## [70] openssl_2.0.0       gtable_0.3.0        assertthat_0.2.1   
+## [73] xfun_0.30           mime_0.12           broom_0.8.0        
+## [76] janeaustenr_0.1.5   viridisLite_0.4.0   gargle_1.2.0       
+## [79] rJava_1.0-6         ellipsis_0.3.2</code></pre>
+<p><strong>The used MRAN snapshot is <a
+href="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-04-21"
+class="uri">https://packagemanager.rstudio.com/cran/__linux__/focal/2022-04-21</a></strong>.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

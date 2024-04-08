@@ -1,0 +1,25 @@
+---
+version: https://codecheck.org.uk/spec/config/1.0/
+
+manifest:
+  - file: NA
+    comment: "The AGILE 2022 Reproducibility Review did not include manifest documentation, see https://github.com/codecheckers/register/issues/38"
+paper:
+  title: "<paper title here>"
+  authors:
+    - name: <first name last name author one>
+      ORCID: <ORCID one>
+    - name: <first last name author et al.>
+      ORCID: <ORCID et al.>
+  reference: https://doi.org/10.5194/agile-giss-4-...
+
+codechecker:
+  - name: <name>
+    ORCID: <ORCID>
+
+report: https://doi.org/10.17605/osf.io/...
+summary: |
+    ...
+repository: https://...
+check_time: "2023-07-09 12:00:00"
+certificate: 2023-xxx
