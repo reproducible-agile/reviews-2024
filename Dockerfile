@@ -20,6 +20,7 @@ RUN R --quiet -f install.R
 
 ## Copies all repo files into the Docker Container
 USER root
+RUN pip install -U "jupyter-server<2.0.0" # notebook 7 is not compatible. Have to downgrade
 COPY . ${HOME}
 RUN chown -R ${NB_USER} ${HOME}
 
