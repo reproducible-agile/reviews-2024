@@ -18,6 +18,7 @@ Find out more online [about reproducible publications at AGILE](https://doi.org/
 The code of this document is published on GitHub in the repository [reproducible-agile/reviews-2024](https://github.com/reproducible-agile/reviews-2024), where you can inspect the R code in the file `agile-reproducibility-reviews.Rmd` and find instructions for reproducing the workflow.
 The [report parameter](https://bookdown.org/yihui/rmarkdown/parameterized-reports.html) `private_info` can be set to `yes` to show information which cannot be shared publicly, such as author names, titles, or excerpts of not accepted submissions, and to upload review files to private shares, which requires authentication.
 
+
 ```{r load_libraries, message=FALSE, warning=FALSE, include=FALSE}
 library("pdftools")
 library("stringr")
@@ -74,15 +75,15 @@ cr_path <- here::here("camera-ready-full-papers")
 ```
 
 ```{r conference_id, echo=FALSE}
-# get this from the URL when logged into EasyChair, e.g., https://easychair.org/conferences/submissions?a=30327426
-conference_id <- "30327426"
+# get this from the URL when logged into EasyChair, e.g., https://easychair.org/conferences/submissions?a=32069676
+conference_id <- "32069676"
 ```
 
 ### Submission metadata
 
 Retrieve all information about submissions from the EasyChair submissions system.
 The full submission information is not included in the public rendering of this report.
-Make sure that the shown columns in the submission table include the colums required in the code below.
+Make sure that the shown columns in the submission table include the columns required in the code below.
 
 ```{r submissions, echo=FALSE}
 submission_page <- httr::GET(url = paste0("https://easychair.org/conferences/submissions?a=", conference_id))
@@ -130,6 +131,7 @@ submission_table %>%
   kable() %>%
   kable_styling("striped")
 ```
+
 
 ```{r submissions_full_metadata, echo=FALSE}
 if(params$private_info) {
