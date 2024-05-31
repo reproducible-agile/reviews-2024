@@ -1,0 +1,141 @@
+---
+title: "Reproducibility review of: Road Network Mapping from Multispectral Satellite Imagery: Leveraging Deep Learning and Spectral Bands"
+author: "Eftychia Koukouraki \\orcid{0000-0003-0928-1139}"
+date: "`r format(Sys.time(), '%Y-%m-%d')`"
+output:
+  pdf_document:
+    toc: false
+papersize: a4
+header-includes:
+  - |
+    % https://tex.stackexchange.com/questions/445563/ieeetran-how-to-include-orcid-in-tex-pdf-with-pdflatex/445583 (works with pdflatex)
+    \usepackage{scalerel}
+    \usepackage{tikz}
+    \usetikzlibrary{svg.path}
+    \definecolor{orcidlogocol}{HTML}{A6CE39}
+    \tikzset{
+      orcidlogo/.pic={
+        \fill[orcidlogocol] svg{M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z};
+        \fill[white] svg{M86.3,186.2H70.9V79.1h15.4v48.4V186.2z}
+                     svg{M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z     M124.3,172.4h24.5c34.9,0,42.9-26.5,42.9-39.7c0-21.5-13.7-39.7-43.7-39.7h-23.7V172.4z}
+                     svg{M88.7,56.8c0,5.5-4.5,10.1-10.1,10.1c-5.6,0-10.1-4.6-10.1-10.1c0-5.6,4.5-10.1,10.1-10.1C84.2,46.7,88.7,51.3,88.7,56.8z};
+      }
+    }
+    \newcommand\orcid[1]{\href{https://orcid.org/#1}{\raisebox{0.15 em}{\mbox{\scalerel*{
+    \begin{tikzpicture}[yscale=-1, transform shape]
+    \pic{orcidlogo};
+    \end{tikzpicture}
+    }{|}}}}}
+    \definecolor{agileblue}{RGB}{0,77,155}
+urlcolor: agileblue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+```
+
+```{r logo, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', out.width='0.3\\linewidth', fig.pos='H'}
+temp <- tempfile(fileext = ".pdf")
+download.file(url = "https://reproducible-agile.github.io/public/images/reproducible-AGILE-logo-square.pdf", destfile = temp)
+knitr::include_graphics(temp)
+```
+
+This report is part of the reproducibility review at the AGILE conference.
+For more information see [https://reproducible-agile.github.io/](https://reproducible-agile.github.io/).
+This document is published on OSF at [https://doi.org/10.17605/osf.io/txgzv](https://doi.org/10.17605/osf.io/txgzv).
+To cite the report use
+
+Koukouraki, E. (2024, May).  Reproducibility review of: Road Network Mapping from Multispectral Satellite Imagery: Leveraging Deep Learning and Spectral Bands. [https://doi.org/10.17605/osf.io/txgzv](https://doi.org/10.17605/osf.io/txgzv)
+
+# Reviewed paper
+
+Samuel Hollendonner, Negar Alinaghi, and Ioannis Giannopoulos: Road Network Mapping from Multispectral Satellite Imagery: Leveraging Deep Learning and Spectral Bands, AGILE GIScience Ser., 5, 6, [https://doi.org/10.5194/agile-giss-5-6-2024](https://doi.org/10.5194/agile-giss-5-6-2024), 2024
+
+# Summary
+
+The paper uses semantic segmentation to extract the road network from RGB and multi-spectral high resolution satellite imagery and applies post-processing to improve the segmentation results. The initial dataset is called SpaceNet (challenge 3) and is openly available, but the authors provided a small pre-processed subset of it in order to verify the functionality of the code. As we were able to confirm that the used data and code are available and reusable, but unable to verify the reported results (due to the lack of available computational resources on the side of the reviewer), the reproduction of the paper is considered **partially successful**.
+
+\clearpage
+
+# Reproducibility reviewer notes
+
+## Data and code sharing
+
+The SpaceNet 3 dataset is available at [https://spacenet.ai/spacenet-roads-dataset/](https://spacenet.ai/spacenet-roads-dataset/) and can be freely downloaded, but requires an Amazon Web Services account. The training dataset is 80.6 GB and the test dataset is 16.2 GB, for a total of 106.8 GB of data.
+The code, instructions and partly pre-processed subset of SpaceNet 3 dataset have been made publicly available at the following link [https://doi.org/10.48436/d5z5b-3vk12](https://doi.org/10.48436/d5z5b-3vk12). The authors have licensed all data files under CC BY 4.0 and all software under MIT License.
+The original SpaceNet dataset was pre-processed in order to convert the geojson files into training images, to reduce the satellite imagery to 8-bit format, and then convert it to PNG files, using a modified version of the Average Path Length Similarity (APLS) Python library ([https://github.com/CosmiQ/apls](https://github.com/CosmiQ/apls)). This modification was not part of the shared code, nor was it clearly described in the instructions.
+The subset that we used to verify the code (Python scripts) had already undergone this pre-processing and was readily available in the materials repository of this paper.
+
+## Computational environment
+
+The Python environment for the reproducibility review was created using conda, following as closely as possible the contents of the environment.yml file provided with the code. An exact recreation of the environment was not possible due to the different operating systems and hardware platforms on which the original study and the reproduction were done.
+The hardware on which the reproduction was run consists of 15.0 GiB of memory and an i7-1185G7 @ 3.00GHz × 8 processor. The operating system is Ubuntu 20.04.6 LTS. There is no special graphical processing unit (GPU) on the system, so all GPU-related computations had to be elaborated with the central processing unit (CPU).
+This contrasts with the original study, which was conducted on a Windows PC with a CUDA-enabled NVIDIA graphics card. 
+The recreated Python environment has been exported as a .yml file and can be found under the name *reproduced/environment.yml* in the OSF repository of this report.
+
+## Reproduction efforts
+
+Using the materials provided by the authors, we were able to verify the workflow for the RGB imagery and functionality of the following scripts: *preprocessing.py*, *train_model.py*, *postprocessing.py* and *evaluation.py*. We were not able to verify the functionality of *ms_channel_analysis.py* and *ms_channel_separation.py*, which are involved in the workflow for the multi-spectral imagery, due to the lack of available data. The scripts seem to be executed, but we cannot verify their output.
+
+The script *preprocessing.py* is responsible for creating the PNG files under *code/data/tiled512/RGB/images* and *code/data/tiled512/RGB/rehashed_ones*. In order to successfully execute the script, we had to manually create the directory *code/data/tiled512/RGB*.
+
+The script *train_model.py* is responsible for creating the file *model_parameters.txt* and subdirectories of *code/segmentation_results/RGB_U-Net_DenseNet201*, namely *checkpoints*, *epoch_results*, *model*, *results*, *weights* and their contents. We run the training for 10 epochs and the log can be found under the name *reproduced/log_train_model.txt* in the OSF repository of this report.
+
+The script *postprocessing.py* is responsible for creating the GeoJSON files under *geojsons/qgis_geojsons* and *geojsons/sub_geojsons*, the pickle files under *graphs*, and the PNG files under *skeletons* and *stitched*. All of these files and directories are created under *code/segmentation_results/RGB_U-Net_DenseNet201/*. In order to successfully execute the script, we had to modify line 317 of the script as following.
+
+```{Python modification1, eval=FALSE, size="scriptsize"}
+# image_name = os.path.splitext(image.replace('_00_00', ''))[0]
+image_name = os.path.splitext(image.replace('_00', ''))[0]
+image_name = os.path.splitext(image_name.replace('_01', ''))[0]
+image_name = os.path.splitext(image_name.replace('_02', ''))[0]
+```
+
+
+
+The script *evaluation.py* is responsible for creating the files *confusion_matrix_data.txt*, *F1_scores_stitched.txt*, *GED106_4.json*, *GED_scores_per_city.txt*, *IoU_scores_stitched.txt*, *relative_GED0_6137.json*, *relGED_scores_per_city.txt*, *statistics_pls_86_31_comb78_79.json* and *Topology_cities.txt* under *code/segmentation_results/RGB_U-Net_DenseNet201*. Similarly to the previous script, we had to modify the script in order to execute it successfully. The modification refers to line 380 and is shown below:
+
+```{Python modification2, eval=FALSE, size="scriptsize"}
+# img = os.path.splitext(img.replace('_00_00', ''))[0]
+img = os.path.splitext(img.replace('_00', ''))[0]
+img = os.path.splitext(img.replace('_01', ''))[0]
+img = os.path.splitext(img.replace('_02', ''))[0]
+```
+
+## Communication with the author
+
+All necessary communication was done with the first author, who was helpful and willing to answer our questions. The first author updated the material repository in order to fix some bugs, which allowed us to verify part of the workflow as described above. The materials were shared through the data repository of the academic institution of the authors and had to be reviewed internally before they were made publicly available, something that induced delays in the process of the reproducibility review. 
+
+
+```{r, echo=FALSE, eval=FALSE, results='hide'}
+# create ZIP of reproduction files and upload to OSF
+library("zip")
+library("here")
+
+zipfile <- here::here("PATH/agile-reproreview-YEAR-NUMBER.zip")
+file.remove(zipfile)
+zip::zipr(zipfile,
+          here::here("2020-018/files to add to the zip, if any"))
+
+library("osfr") # See docs at https://docs.ropensci.org/osfr/
+# OSF_PAT is in .Renviron in parent directory
+# We cannot use osfr to create a new component (with osfr::osf_create_component(x = osfr::osf_retrieve_node("6k5fh"), ...) because that will set the storage location to outside Europe.
+
+# retrieve project
+project <- osfr::osf_retrieve_node("OSF ID")
+
+# upload files
+osfr::osf_upload(x = project,
+                 conflicts = "overwrite",
+                 path = c(list.files(here::here("PATH"),
+                                     pattern = "agile-reproreview-.*(pdf$|Rmd$|zip$)",
+                                     full.names = TRUE),
+                          "COPYRIGHT"
+                          )
+                 )
+```
