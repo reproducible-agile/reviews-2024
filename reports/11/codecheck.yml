@@ -1,0 +1,32 @@
+---
+version: https://codecheck.org.uk/spec/config/1.0/
+
+manifest:
+  - file: NA
+    comment: "The AGILE 2024 Reproducibility Review did not include manifest documentation, see https://github.com/codecheckers/register/issues/69"
+paper:
+  title: "Developing a city-specific walkability index through a participatory approach"
+  authors:
+    - name: Matias Cardoso1
+    - name: Vasileios Milias
+    - name: Maurice Harteveld
+  reference: https://doi.org/10.5194/agile-giss-5-2-2024
+
+codechecker:
+  - name: Frank Ostermann
+    ORCID: 0000-0002-9317-8291
+
+report: https://doi.org/10.17605/osf.io/CSB7R
+summary: |
+  The paper investigates to improve on walkability indices that consider city-specifics.
+  It employs a  mixed methods approach, starting with a literature review to identify relevant elements, followed by participatory sessions with urban planners and policymakers to determine factors for the case study of Amsterdam.
+  In a last step, the authors quantify these factors and calculate walkability scores for the study area.
+  The first two steps in the research design are out of scope of this reproducibility review, which focuses on the computational reproducibility of the quantitative analysis (phase C in Figure 1 of the paper).
+
+  The authors provide data sets in the repository to execute the steps of normalization, calculation, and visualization.
+  A visual inspection using QGIS shows similar patterns of walkability scores. 
+  
+  This reproducibility review was thus only able to validate part of the workflow. However, given that the input data is in principle openly available, the manual analysis steps are standard operations with documented parameters, the computations are deterministic, and all tools and software are free and open source, this review can conclude that the quantitative analysis part of the paper is reproducible. 
+repository: https://github.com/reproducible-agile/WalkabilityInAmsterdam
+check_time: "2024-05-23 15:47"
+certificate: 2024-009

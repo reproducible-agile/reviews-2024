@@ -1,0 +1,34 @@
+---
+version: https://codecheck.org.uk/spec/config/1.0/
+
+manifest:
+  - file: NA
+    comment: "The AGILE 2024 Reproducibility Review did not include manifest documentation, see https://github.com/codecheckers/register/issues/69"
+paper:
+  title: "Knowledge-Based Identification of Urban Green Spaces: Allotments"
+  authors:
+    - name: Irada Ismayilova
+      ORCID: 0000-0003-4414-4084
+    - name: Sabine Timpf
+      ORCID: 0000-0002-7964-4110
+  reference: https://doi.org/10.5194/agile-giss-5-8-2024
+
+codechecker:
+  - name: Frank O. Ostermann
+    ORCID: 0000-0002-9317-8291
+
+report: https://doi.org/10.17605/OSF.IO/3NBJW
+
+summary: |
+  The paper addresses the issue that allotment gardens are not recognized as separate land use / land  cover category, although they are unique among urban green spaces and provide highly significant benefits.
+  The research uses a three-step procedure: First, a random forest classifier identifies green spaces from digital orthophotos; second, garden huts are extracted; and third, a density-based clustering identifies areas of allotment gardens.
+  The computational environment relies on a mix of free and open source software (R software for the random forest classification) and proprietary GIS software (ESRI ArcGIS for the height thresholds, refinement of the classification, and density-based clustering).
+  
+  Upon request, the authors provided the digital orthophoto, training data and code for step one, as  well as a sample data set (smaller area) and executable workflow for the ArcGIS Modelbuilder as an  ArcGIS project package.
+  The reproducibility review can confirm that that the analysis runs as intended, but not check the validity of the outputs shown in the paper. 
+  All the provided code was run and executes without errors, generating valid output.
+  The clustering  algorithm does not find any clusters, but that may be due to the small size of the sample area. 
+  This reproducibility review was thus able to validate the entire analysis workflow. With the provided  documentation, code, and sample data (see references), other researchers should be able to succeed in replicating the results. The functionality used in the proprietary software is available in free and  open software packages and can thus be implemented without access to ArcGIS.
+repository: https://doi.org/10.6084/m9.figshare.25683828.v1
+check_time: "2024-05-23 03:49:00"
+certificate: 2024-008

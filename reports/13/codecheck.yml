@@ -1,0 +1,26 @@
+---
+version: https://codecheck.org.uk/spec/config/1.0/
+
+manifest:
+  - file: NA
+    comment: "The AGILE 2024 Reproducibility Review did not include manifest documentation, see https://github.com/codecheckers/register/issues/69"
+paper:
+  title: "Random Data Distribution for Efficient Parallel Point Cloud Processing"
+  authors:
+    - name: Balthasar Teuscher
+      ORCID: 0000-0002-2811-1920
+    - name: Martin Werner
+  reference: https://doi.org/10.5194/agile-giss-5-15-2024
+
+codechecker:
+  - name: Carlos Granell
+    ORCID: 0000-0003-1004-9695
+
+report: https://doi.org/10.17605/OSF.IO/YMC3T
+summary: |
+    The workflow provided was partially reproduced in the sense that I was able to reproduce the system reported in the paper qualitatively.
+    That is, I did not reproduce the experiment or other results (figures, etc.) included in the article, but I was able to set up and run the system described in the paper and test it with some query samples.
+    Therefore, by doing this, this report ensures that the system works as described in the manuscript.
+repository: https://github.com/tum-bgd/2024-AGILE-RandomDataDistribution
+check_time: "2024-05-23 12:00:00"
+certificate: 2024-006

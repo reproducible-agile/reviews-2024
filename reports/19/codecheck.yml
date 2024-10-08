@@ -1,0 +1,34 @@
+---
+version: https://codecheck.org.uk/spec/config/1.0/
+
+manifest:
+  - file: NA
+    comment: "The AGILE 2024 Reproducibility Review did not include manifest documentation, see https://github.com/codecheckers/register/issues/69"
+paper:
+  title: "Enhancing toponym identification: Leveraging Topo-BERT and open-source data to differentiate between toponyms and extract spatial relationships"
+  authors:
+    - name: Joseph Shingleton
+      ORCID: 0000-0002-1628-3231
+    - name: Ana Basiri
+      ORCID: 0000-0002-2399-1797
+  reference: https://doi.org/10.5194/agile-giss-5-12-2024
+
+codechecker:
+  - name: Rémy Decoupes
+    ORCID: 0000-0003-0863-9581
+
+report: https://doi.org/10.17605/osf.io/NBK57
+summary: |
+  As indicated in the Data and Software Availability section, the authors shared their code, data, and trained models through an OSF (Open Science Framework) repository.
+  Through 4 notebooks, we were able to train two baseline models and then create a new training dataset to train the proposed model by the authors.
+  These models were then compared with human evaluation (through shared data).
+  Evaluating the reproducibility of this article was not an easy task.
+  In fact, this processing chain requires a lot of computational resources and time for its execution.
+  Another difficulty was that the notebooks and Python library developed by the authors and shared via OSF contained some errors.
+  However, the authors accompanied me throughout this process, providing new versions of the code files to correct the errors I encountered.
+  My feeling is that the reproducibility review process was beneficial.
+  The scientific article was almost entirely reproduced
+repository: https://doi.org/10.17605/OSF.IO/WAF2Q
+
+check_time: "2024-05-27 10:26:00"
+certificate: 2024-010

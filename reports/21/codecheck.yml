@@ -1,0 +1,44 @@
+---
+version: https://codecheck.org.uk/spec/config/1.0/
+
+manifest:
+  - file: NA
+    comment: "The AGILE 2024 Reproducibility Review did not include manifest documentation, see https://github.com/codecheckers/register/issues/69"
+paper:
+  title: "Process Analysis in Humanitarian Voluntary Geographic Information: the case of the HOT Tasking Manager"
+  authors:
+    - name: Dagoberto José Herrera-Murillo
+      ORCID: 0000-0002-8000-628X
+    - name: Héctor Ochoa-Ortiz
+      ORCID: 0000-0002-6477-0683
+    - name: Umair Ahmed
+      ORCID: 0000-0003-2260-2777
+    - name: Francisco Javier López-Pellicer
+      ORCID: 0000-0001-6491-7430
+    - name: Barbara Re
+      ORCID: 0000-0001-5374-2364
+    - name: Andrea Polini
+      ORCID: 0000-0002-2840-7561
+    - name: Javier Nogueras-Iso
+      ORCID: 0000-0002-1279-0367
+  reference: https://doi.org/10.5194/agile-giss-5-5-2024
+
+codechecker:
+  - name: Rémy Decoupes
+    ORCID: 0000-0003-0863-9581
+
+report: https://doi.org/10.17605/osf.io/FMGB4
+summary: |
+  The authors made their code available through a GitHub repository.
+  The Readme.md file provides clear instructions for executing the entire code. It is worth noting that the input data is available provided that accounts are created with HOTOSM and Bunting Labs.
+  The data retrieval process takes a long time.
+  Therefore, the authors provided me with all the input data for my review.
+  I did not encounter any difficulties in executing the Python notebooks.
+  As a result, I produced intermediate data (in 4 CSV files). Unfortunately, I encountered some blocking errors when executing the R Markdown (which is the notebook responsible for producing tables and figures of the manuscript).
+  Assisted by the authors, we discovered that the errors were caused by the content of the intermediate files I had generated.
+  Strictly speaking, since the authors shared all their input data with me, I should not have encountered these errors.
+  To continue my review, the authors sent me their version of the intermediate files.
+  Thanks to them, I was able to execute the entire R Markdown and generate all the tables and figures.
+repository: https://github.com/Robot8A/beh-analysis-hotosm-tm
+check_time: "2024-05-27 10:29:00"
+certificate: 2024-011

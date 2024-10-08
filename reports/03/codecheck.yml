@@ -1,0 +1,29 @@
+---
+version: https://codecheck.org.uk/spec/config/1.0/
+
+manifest:
+  - file: NA
+    comment: "The AGILE 2024 Reproducibility Review did not include manifest documentation, see https://github.com/codecheckers/register/issues/69"
+paper:
+  title: "Road Network Mapping from Multispectral Satellite Imagery: Leveraging Deep Learning and Spectral Bands"
+  authors:
+    - name: Samuel Hollendonner 
+      ORCID: 0009-0000-7923-3357
+    - name: Negar Alinaghi
+      ORCID: 0000-0001-6594-4481
+    - name: Ioannis Giannopoulos
+      ORCID: 0000-0002-2556-5230
+  reference: https://doi.org/10.5194/agile-giss-4-...
+
+codechecker:
+  - name: Eftychia Koukouraki
+    ORCID: 0000-0003-0928-1139
+
+report: https://doi.org/10.17605/osf.io/TXGZV
+summary: |
+  The paper uses semantic segmentation to extract the road network from RGB and multi-spectral high resolution satellite imagery and applies post-processing to improve the segmentation results.
+  The initial dataset is called SpaceNet (challenge 3) and is openly available, but the authors provided a small pre-processed subset of it in order to verify the functionality of the code.
+  As we were able to confirm that the used data and code are available and reusable, but unable to verify the reported results (due to the lack of available computational resources on the side of the reviewer), the reproduction of the paper is considered partially successful.
+repository: https://doi.org/10.48436/d5z5b-3vk12
+check_time: "2024-05-31 04:51:00"
+certificate: 2024-013
